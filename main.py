@@ -1,150 +1,94 @@
-from facade.hospital_facade import HospitalFacade
-from enums.prioridad import Prioridad
+# main.py
+from servicios.centro_service import CentroService
 
+service = CentroService()
 
-def mostrar_pacientes(lista):
+# Centros
 
-    if not lista:
-        print("\nNo hay pacientes.")
-        return
+service.crear_centro(
+    1,
+    "Centro Suba",
+    "Suba"
+)
 
-    for paciente in lista:
-        print(paciente)
+service.crear_centro(
+    2,
+    "Centro Chapinero",
+    "Chapinero"
+)
 
+service.crear_centro(
+    3,
+    "Centro Bosa",
+    "Bosa"
+)
 
-def menu():
-    print("\n" + "=" * 50)
-    print(" SISTEMA DE GESTIÓN HOSPITALARIA ")
-    print("=" * 50)
-    print("1. Registrar paciente")
-    print("2. Clasificar paciente (Triage)")
-    print("3. Atender paciente")
-    print("4. Ver cola de llegada")
-    print("5. Ver lista de espera")
-    print("6. Ver historial de atendidos")
-    print("7. Buscar paciente")
-    print("0. Salir")
-    print("=" * 50)
+service.crear_centro(
+    4,
+    "Centro Teusaquillo",
+    "Teusaquillo"
+)
 
+service.crear_centro(
+    5,
+    "Centro Soacha",
+    "Soacha"
+)
 
-def main():
+# Recorridos
 
-    hospital = HospitalFacade()
+service.registrar_recorrido(
+    1,
+    2,
+    23
+)
 
-    while True:
+service.registrar_recorrido(
+    1,
+    3,
+    35
+)
 
-        menu()
+service.registrar_recorrido(
+    2,
+    3,
+    29
+)
 
-        opcion = input("Seleccione una opción: ")
+service.registrar_recorrido(
+    2,
+    4,
+    12
+)
 
-        match opcion:
+service.registrar_recorrido(
+    3,
+    5,
+    8
+)
 
-            case "1":
+service.registrar_recorrido(
+    4,
+    1,
+    24
+)
 
-                nombre = input("Nombre completo: ")
-                edad = int(input("Edad: "))
+service.registrar_recorrido(
+    4,
+    5,
+    39
+)
 
-                paciente = hospital.registro.registrar_paciente(
-                    nombre,
-                    edad
-                )
+# Listar centros
 
-                print("\nPaciente registrado correctamente")
-                print(paciente)
+print("\n=== CENTROS ORDENADOS ===")
 
-            case "2":
+for centro in service.listar_centros():
+    print(centro)
 
-                siguiente = hospital.consulta.cola_llegada.ver_primero()
+# Recorridos de Suba
 
-                if not siguiente:
-                    print("\nNo hay pacientes pendientes de clasificación.")
-                    continue
+print("\n=== RECORRIDOS DESDE SUBA ===")
 
-                print("\nPaciente a clasificar:")
-                print(siguiente)
-
-                print("\n1. ALTA")
-                print("2. NORMAL")
-
-                opcion_prioridad = input(
-                    "Seleccione prioridad: "
-                )
-
-                if opcion_prioridad == "1":
-                    prioridad = Prioridad.ALTA
-                else:
-                    prioridad = Prioridad.NORMAL
-
-                paciente = hospital.triage.clasificar_paciente(
-                    prioridad
-                )
-
-                print("\nPaciente clasificado:")
-                print(paciente)
-
-            case "3":
-
-                paciente = hospital.atencion.atender_paciente()
-
-                if paciente:
-                    print("\nPaciente atendido:")
-                    print(paciente)
-                else:
-                    print("\nNo hay pacientes en espera.")
-
-            case "4":
-
-                print("\nCOLA DE LLEGADA")
-                mostrar_pacientes(
-                    hospital.consulta.ver_llegadas()
-                )
-
-            case "5":
-
-                espera = hospital.consulta.ver_lista_espera()
-
-                print("\nALTA PRIORIDAD")
-                mostrar_pacientes(espera["alta"])
-
-                print("\nPRIORIDAD NORMAL")
-                mostrar_pacientes(espera["normal"])
-
-            case "6":
-
-                print("\nHISTORIAL DE ATENDIDOS")
-
-                mostrar_pacientes(
-                    hospital.consulta.ver_historial()
-                )
-
-            case "7":
-
-                codigo = input(
-                    "Ingrese código del paciente: "
-                ).upper()
-
-                paciente, ubicacion = (
-                    hospital.consulta.buscar_paciente(
-                        codigo
-                    )
-                )
-
-                if paciente:
-                    print("\nPaciente encontrado")
-                    print(paciente)
-                    print(f"Ubicación: {ubicacion}")
-                else:
-                    print("\nPaciente no encontrado.")
-
-            case "0":
-
-                print("\nGracias por usar el sistema.")
-                break
-
-            case _:
-
-                print("\nOpción inválida.")
-
-
-if __name__ == "__main__":
-    main()
+for recorrido in service.listar_recorridos(1):
+    print(recorrido)
