@@ -23,7 +23,6 @@ class OrdenadorEstudiantes:
                 )
 
                 if actual > siguiente:
-
                     estudiantes[j], estudiantes[j + 1] = (
                         estudiantes[j + 1],
                         estudiantes[j]

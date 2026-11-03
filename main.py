@@ -14,23 +14,17 @@ def mostrar_estudiantes(estudiantes):
 
 
 def solicitar_criterio():
-
     print("\nSeleccione criterio de ordenamiento")
     print("1. Nombre")
     print("2. Edad")
-
     opcion = input("Opción: ")
-
     if opcion == "1":
         return "nombre"
 
     return "edad"
 
-
 def main():
-
     service = EstudianteService()
-
     while True:
 
         print("\n===================================")
@@ -56,7 +50,6 @@ def main():
                     nombre,
                     edad
                 )
-
                 print("\n✅ Estudiante registrado correctamente")
 
             except ValueError:
@@ -71,29 +64,22 @@ def main():
         elif opcion == "3":
 
             criterio = solicitar_criterio()
-
             resultado = service.ordenar_bubble(
                 criterio
             )
-
             print(
                 f"\nESTUDIANTES ORDENADOS POR {criterio.upper()} (BUBBLE SORT)"
             )
-
             mostrar_estudiantes(resultado)
 
         elif opcion == "4":
-
             criterio = solicitar_criterio()
-
             resultado = service.ordenar_merge(
                 criterio
             )
-
             print(
                 f"\nESTUDIANTES ORDENADOS POR {criterio.upper()} (MERGE SORT)"
             )
-
             mostrar_estudiantes(resultado)
 
         elif opcion == "5":
