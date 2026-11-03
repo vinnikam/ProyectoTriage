@@ -1,149 +1,109 @@
-from facade.hospital_facade import HospitalFacade
-from enums.prioridad import Prioridad
+from servicios.estudiante_servicios import EstudianteService
 
 
-def mostrar_pacientes(lista):
+def mostrar_estudiantes(estudiantes):
 
-    if not lista:
-        print("\nNo hay pacientes.")
+    if not estudiantes:
+        print("\nNo hay estudiantes registrados.")
         return
 
-    for paciente in lista:
-        print(paciente)
+    print("\nLISTADO DE ESTUDIANTES")
+
+    for estudiante in estudiantes:
+        print(estudiante)
 
 
-def menu():
-    print("\n" + "=" * 50)
-    print(" SISTEMA DE GESTIÓN HOSPITALARIA ")
-    print("=" * 50)
-    print("1. Registrar paciente")
-    print("2. Clasificar paciente (Triage)")
-    print("3. Atender paciente")
-    print("4. Ver cola de llegada")
-    print("5. Ver lista de espera")
-    print("6. Ver historial de atendidos")
-    print("7. Buscar paciente")
-    print("0. Salir")
-    print("=" * 50)
+def solicitar_criterio():
+
+    print("\nSeleccione criterio de ordenamiento")
+    print("1. Nombre")
+    print("2. Edad")
+
+    opcion = input("Opción: ")
+
+    if opcion == "1":
+        return "nombre"
+
+    return "edad"
 
 
 def main():
 
-    hospital = HospitalFacade()
+    service = EstudianteService()
 
     while True:
 
-        menu()
+        print("\n===================================")
+        print(" SISTEMA DE ESTUDIANTES")
+        print("===================================")
+        print("1. Inscribir estudiante")
+        print("2. Listar estudiantes")
+        print("3. Ordenar Bubble Sort")
+        print("4. Ordenar Merge Sort")
+        print("5. Salir")
 
-        opcion = input("Seleccione una opción: ")
+        opcion = input("\nSeleccione una opción: ")
 
-        match opcion:
+        if opcion == "1":
 
-            case "1":
-
-                nombre = input("Nombre completo: ")
+            try:
+                codigo = int(input("Código: "))
+                nombre = input("Nombre: ")
                 edad = int(input("Edad: "))
 
-                paciente = hospital.registro.registrar_paciente(
+                service.crear_estudiante(
+                    codigo,
                     nombre,
                     edad
                 )
 
-                print("\nPaciente registrado correctamente")
-                print(paciente)
+                print("\n✅ Estudiante registrado correctamente")
 
-            case "2":
+            except ValueError:
+                print("\n❌ Datos inválidos")
 
-                siguiente = hospital.consulta.cola_llegada.ver_primero()
+        elif opcion == "2":
 
-                if not siguiente:
-                    print("\nNo hay pacientes pendientes de clasificación.")
-                    continue
+            mostrar_estudiantes(
+                service.listar_estudiantes()
+            )
 
-                print("\nPaciente a clasificar:")
-                print(siguiente)
+        elif opcion == "3":
 
-                print("\n1. ALTA")
-                print("2. NORMAL")
+            criterio = solicitar_criterio()
 
-                opcion_prioridad = input(
-                    "Seleccione prioridad: "
-                )
+            resultado = service.ordenar_bubble(
+                criterio
+            )
 
-                if opcion_prioridad == "1":
-                    prioridad = Prioridad.ALTA
-                else:
-                    prioridad = Prioridad.NORMAL
+            print(
+                f"\nESTUDIANTES ORDENADOS POR {criterio.upper()} (BUBBLE SORT)"
+            )
 
-                paciente = hospital.triage.clasificar_paciente(
-                    prioridad
-                )
+            mostrar_estudiantes(resultado)
 
-                print("\nPaciente clasificado:")
-                print(paciente)
+        elif opcion == "4":
 
-            case "3":
+            criterio = solicitar_criterio()
 
-                paciente = hospital.atencion.atender_paciente()
+            resultado = service.ordenar_merge(
+                criterio
+            )
 
-                if paciente:
-                    print("\nPaciente atendido:")
-                    print(paciente)
-                else:
-                    print("\nNo hay pacientes en espera.")
+            print(
+                f"\nESTUDIANTES ORDENADOS POR {criterio.upper()} (MERGE SORT)"
+            )
 
-            case "4":
+            mostrar_estudiantes(resultado)
 
-                print("\nCOLA DE LLEGADA")
-                mostrar_pacientes(
-                    hospital.consulta.ver_llegadas()
-                )
+        elif opcion == "5":
 
-            case "5":
+            print("\nFinalizado...")
+            break
 
-                espera = hospital.consulta.ver_lista_espera()
+        else:
 
-                print("\nALTA PRIORIDAD")
-                mostrar_pacientes(espera["alta"])
-
-                print("\nPRIORIDAD NORMAL")
-                mostrar_pacientes(espera["normal"])
-
-            case "6":
-
-                print("\nHISTORIAL DE ATENDIDOS")
-
-                mostrar_pacientes(
-                    hospital.consulta.ver_historial()
-                )
-
-            case "7":
-
-                codigo = input(
-                    "Ingrese código del paciente: "
-                ).upper()
-
-                paciente, ubicacion = (
-                    hospital.consulta.buscar_paciente(
-                        codigo
-                    )
-                )
-
-                if paciente:
-                    print("\nPaciente encontrado")
-                    print(paciente)
-                    print(f"Ubicación: {ubicacion}")
-                else:
-                    print("\nPaciente no encontrado.")
-
-            case "0":
-
-                print("\nGracias por usar el sistema.")
-                break
-
-            case _:
-
-                print("\nOpción inválida.")
+            print("\n❌ Opción no válida")
 
 
 if __name__ == "__main__":
